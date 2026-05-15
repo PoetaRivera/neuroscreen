@@ -22,7 +22,7 @@ export async function answerAllQuestions(page, count) {
 export async function clearStorage(page) {
   await page.goto('/');
   await page.evaluate(() => {
-    Object.keys(localStorage).filter(k => k.startsWith('neuroscreen_')).forEach(k => localStorage.removeItem(k));
+    Object.keys(localStorage).filter(k => k.startsWith('evalumind_')).forEach(k => localStorage.removeItem(k));
     sessionStorage.clear();
   });
 }

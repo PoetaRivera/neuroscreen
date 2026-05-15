@@ -1,4 +1,4 @@
-# Investigaci贸n: Complementos de Acci贸n para NeuroScreen
+# Investigaci贸n: Complementos de Acci贸n para EvaluMind
 
 ## Objetivo
 Complementar los 7 tests Likert existentes con tareas conductuales/de rendimiento que midan objetivamente los mismos constructos, permitiendo comparar auto-reporte vs. rendimiento real.
@@ -18,7 +18,7 @@ Toplak, West & Stanovich (2013, *Journal of Child Psychology and Psychiatry*) 鈥
 
 ---
 
-## Estado actual de NeuroScreen
+## Estado actual de EvaluMind
 
 | # | Test | Tipo actual | 驴Tiene complemento de acci贸n? |
 |---|------|-------------|-------------------------------|

@@ -113,7 +113,7 @@ test.describe('Likert test flow', () => {
     // Fill localStorage with answers to skip to results
     await page.evaluate(() => {
       const answers = new Array(16).fill(2);
-      localStorage.setItem('neuroscreen_hsp-adulto_state', JSON.stringify({
+      localStorage.setItem('evalumind_hsp-adulto_state', JSON.stringify({
         accepted: true,
         answers: answers,
         currentIndex: 15,

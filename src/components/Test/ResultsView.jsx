@@ -452,7 +452,7 @@ function ResultsView({ result, testId, loading, error, saved, remoteSaved, onRes
           onClick={() => {
             const maxScore = result.maxScores?.total ?? (result.dimensions?.length > 0 ? 64 : 100);
             exportResultsToPDF([{
-              testTitle: testId || 'Resultado NeuroScreen',
+              testTitle: testId || 'Resultado EvaluMind',
               category: result.category,
               total: result.total,
               maxScore,

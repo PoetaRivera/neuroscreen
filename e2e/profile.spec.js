@@ -12,7 +12,7 @@ test.describe('Profile Map', () => {
   test('shows results from sessionStorage', async ({ page }) => {
     await page.goto('/');
     await page.evaluate(() => {
-      sessionStorage.setItem('neuroscreen_completed_tests', JSON.stringify({
+      sessionStorage.setItem('evalumind_completed_tests', JSON.stringify({
         'tdah-adult-v2': { testId: 'tdah-adult-v2', total: 42, category: 'alta-probabilidad', dimensions: { inattention: 24, hyperactivityPhysical: 8, impulsivityVerbal: 10 }, profiles: [], completedAt: Date.now() },
         'tea-adult-v1': { testId: 'tea-adult-v1', total: 38, category: 'moderada-probabilidad', dimensions: { socialCommunication: 10, relationships: 8, routinesFlexibility: 12, sensoryInterests: 8 }, profiles: [], completedAt: Date.now() },
       }));
@@ -31,7 +31,7 @@ test.describe('Complementarity notes', () => {
     // Set up RSD completion in sessionStorage
     await page.goto('/');
     await page.evaluate(() => {
-      sessionStorage.setItem('neuroscreen_completed_tests', JSON.stringify({
+      sessionStorage.setItem('evalumind_completed_tests', JSON.stringify({
         'rsd-adult-v1': { testId: 'rsd-adult-v1', total: 42, category: 'rsd-marcada', dimensions: {}, profiles: [], completedAt: Date.now() },
       }));
     });
@@ -40,7 +40,7 @@ test.describe('Complementarity notes', () => {
     await page.goto('/test/tdah-adulto');
     await page.evaluate(() => {
       const answers = new Array(16).fill(4);
-      localStorage.setItem('neuroscreen_tdah-adulto_state', JSON.stringify({
+      localStorage.setItem('evalumind_tdah-adulto_state', JSON.stringify({
         accepted: true,
         answers: answers,
         currentIndex: 15,

@@ -1,4 +1,4 @@
-# Plan de Implementación — NeuroScreen (Correcciones Post-Evaluación)
+# Plan de Implementación — EvaluMind (Correcciones Post-Evaluación)
 
 ## Contexto
 Evaluación profesional completa (5 agentes en paralelo) encontró 36 issues: 6 críticos, 14 altos, 10 medios, 6 bajos. Este plan cubre todas las correcciones organizadas en 5 fases por prioridad y dependencias.
@@ -149,7 +149,7 @@ Evaluación profesional completa (5 agentes en paralelo) encontró 36 issues: 6 
 - Cambiar `lang="en"` → `lang="es"`
 - Agregar `meta name="description"`
 - Agregar Open Graph tags
-- Agregar title descriptivo: "NeuroScreen — Screening orientativo de neurodivergencia"
+- Agregar title descriptivo: "EvaluMind — Screening orientativo de neurodivergencia"
 
 ### 5.2 Agregar robots.txt
 - **Archivo nuevo:** `public/robots.txt`

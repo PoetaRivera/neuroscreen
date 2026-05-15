@@ -44,7 +44,7 @@ test.describe('FAS flow', () => {
 
     // Inject FAS state with pre-filled words
     await page.evaluate(() => {
-      localStorage.setItem('neuroscreen_fas_state', JSON.stringify({
+      localStorage.setItem('evalumind_fas_state', JSON.stringify({
         accepted: true,
         answers: ['foco', 'fresa', 'fuerza', 'fuego'],
         currentIndex: 0,

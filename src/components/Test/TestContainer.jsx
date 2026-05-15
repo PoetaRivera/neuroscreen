@@ -35,7 +35,7 @@ function makeEmptyAnswers(count) {
 }
 
 function storageKey(testId) {
-  return `neuroscreen_${testId}_state`;
+  return `evalumind_${testId}_state`;
 }
 
 function loadState(testId) {

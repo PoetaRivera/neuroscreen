@@ -1,4 +1,4 @@
-const SESSION_KEY = 'neuroscreen_completed_tests';
+const SESSION_KEY = 'evalumind_completed_tests';
 
 function loadAll() {
   try {

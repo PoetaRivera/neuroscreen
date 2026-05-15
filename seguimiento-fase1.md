@@ -1,9 +1,21 @@
-# Seguimiento Fase 1 — NeuroScreen MVP
+# Seguimiento Fase 1 — EvaluMind MVP
 
-## Estado: 9 tests + 5 features + testing + correcciones post-evaluación
+## Estado: 20 tests registrados + 10 features + testing + correcciones post-evaluación
 
 ### Evaluación profesional (2026-05-13)
 Evaluación con 5 agentes en paralelo encontró 36 issues. Plan de implementación en 5 fases, todas completadas.
+
+### Commits recientes (2026-05-15)
+- `87c78ea` — **Corrección bugs P0**: usePageVisibility hook (pausa al cambiar pestaña), botones touch en SART/Flanker/Navon/Switch/AuditoryDistraction, RT real en SensoryThreshold, data-testid en 10 componentes
+- `53ffdd2` — **Fix firestore.rules**: elimina función `validOptionalString` sin uso que generaba warning de compilación
+- `2e088d8` — **testMetadata.js + refinamientos visuales**: metadata centralizada de 20 tests (7 Likert + 13 tareas conductuales) con `getAllTestCards()`. Refinamientos CSS/componentes en TestContainer, HomePage, Layout, DisclaimerModal, ResultsView, ProfileMap y 13 scoring utilities. Actualización de config (firestore rules, eslint, index.html SEO, README)
+
+### Infraestructura (2026-05-15)
+- ✅ Firestore API habilitada
+- ✅ BD `(default)` creada en `evalumind-app`
+- ✅ `firestore.rules` desplegado (0 warnings)
+- ✅ Build + deploy completado (`87c78ea`)
+- 🌎 **Producción**: https://evalumind-app.web.app
 
 ---
 
@@ -100,9 +112,9 @@ npm run test:e2e     # 31 tests de flujo (~10s)
 
 | Servicio | URL |
 |---|---|
-| Producción | https://neuroscreen-app.web.app |
-| Firebase Console | https://console.firebase.google.com/project/neuroscreen-app |
-| GitHub | https://github.com/PoetaRivera/neuroscreen |
+| Producción | https://evalumind-app.web.app |
+| Firebase Console | https://console.firebase.google.com/project/evalumind-app |
+| GitHub | https://github.com/PoetaRivera/evalumind |
 
 ### Arquitectura final
 
@@ -181,6 +193,7 @@ src/
 
 ### Por dónde seguir
 
-1. **Inmediato**: Habilitar Cloud Firestore API → crear BD → desplegar reglas → hacer deploy
-2. **Siguiente iteración**: Mejorar tests E2E + agregar tests unitarios faltantes
-3. **Features futuras**: Span de Dígitos, directorio profesional real, modo oscuro, i18n
+1. ~~Inmediato: push, Firestore, deploy~~ ✅ Completado 2026-05-14
+2. **Siguiente iteración (tests de acción)**: Los 11 tests de acción listados en `testMetadata.js` ya tienen componentes y scoring utilities creados, pero varios son stubs (DigitSpanTask, FlankerTask, NavonTask, SART, RMET, SwitchTask, SensoryThreshold, AuditoryDistraction). Completar su implementación funcional.
+3. **Mejoras testing**: Reemplazar `dispatchEvent` por `click()` en E2E, agregar Firefox/WebKit, tests unitarios para `wordValidation.js` y `sessionResults.js`
+4. **Features futuras**: directorio profesional real, modo oscuro, i18n, tipografía dislexia

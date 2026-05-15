@@ -16,7 +16,7 @@ export async function exportResultsToPDF(results) {
   // Header
   doc.setFontSize(20);
   doc.setTextColor(30, 41, 59);
-  doc.text('NeuroScreen', 20, y);
+  doc.text('EvaluMind', 20, y);
   y += 10;
 
   doc.setFontSize(10);
@@ -105,7 +105,7 @@ export async function exportResultsToPDF(results) {
   doc.setTextColor(156, 163, 175);
   const disclaimer =
     'Este documento es orientativo y no constituye un diagnóstico médico ni psicológico. ' +
-    'NeuroScreen es una herramienta de screening anónima y gratuita. ' +
+    'EvaluMind es una herramienta de screening anónima y gratuita. ' +
     'Consulta siempre con un profesional de la salud mental.';
   const discLines = doc.splitTextToSize(disclaimer, 170);
   discLines.forEach((line) => {
@@ -113,7 +113,7 @@ export async function exportResultsToPDF(results) {
     y += 4;
   });
 
-  doc.save(`neuroscreen-perfil-${new Date().toISOString().split('T')[0]}.pdf`);
+  doc.save(`evalumind-perfil-${new Date().toISOString().split('T')[0]}.pdf`);
 }
 
 /**

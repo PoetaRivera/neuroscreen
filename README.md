@@ -1,6 +1,6 @@
-# NeuroScreen
+# EvaluMind
 
-NeuroScreen es una aplicación React/Vite para screening orientativo de rasgos cognitivos y neurodivergentes en adultos. Combina cuestionarios de auto-observación con tareas interactivas breves, un mapa de funcionamiento, notas de complementariedad y exportación a PDF.
+EvaluMind es una aplicación React/Vite para screening orientativo de rasgos cognitivos y neurodivergentes en adultos. Combina cuestionarios de auto-observación con tareas interactivas breves, un mapa de funcionamiento, notas de complementariedad y exportación a PDF.
 
 ## Estado
 

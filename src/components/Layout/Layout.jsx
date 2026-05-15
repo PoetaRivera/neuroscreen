@@ -15,8 +15,8 @@ function Layout() {
   return (
     <div className="app-layout">
       <header className="app-header">
-        <NavLink to="/" className="app-logo" aria-label="NeuroScreen — Ir al inicio">
-          NeuroScreen
+        <NavLink to="/" className="app-logo" aria-label="EvaluMind — Ir al inicio">
+          EvaluMind
         </NavLink>
         <nav className="app-nav" role="navigation" aria-label="Navegación principal">
           {NAV_LINKS.filter((l) => l.to !== '/').map((link) => (
@@ -39,7 +39,7 @@ function Layout() {
       <footer className="app-footer">
         <div className="app-footer-content">
           <div className="app-footer-brand">
-            <span className="app-footer-name">NeuroScreen</span>
+            <span className="app-footer-name">EvaluMind</span>
             <span className="app-footer-tagline">Herramienta de orientación cognitiva</span>
           </div>
           <nav className="app-footer-nav">
@@ -50,7 +50,7 @@ function Layout() {
             ))}
           </nav>
           <p className="app-footer-disclaimer">
-            NeuroScreen no diagnostica. Solo ofrece información orientativa basada en criterios científicos.
+            EvaluMind no diagnostica. Solo ofrece información orientativa basada en criterios científicos.
             Consulta siempre con un profesional de la salud.
           </p>
           <p className="app-footer-privacy">

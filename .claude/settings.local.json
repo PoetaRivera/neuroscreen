@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git push *)",
+      "Bash(npx firebase *)",
+      "Bash(firebase firestore:databases:list *)",
+      "Bash(firebase firestore:rules:get *)",
+      "Bash(firebase auth:export --token)",
+      "Bash(gcloud auth *)",
+      "Bash(curl -s -H \"Authorization: Bearer $\\(firebase auth:export --token 2>&1 || gcloud auth print-access-token 2>&1\\)\" \"https://firebaserules.googleapis.com/v1/projects/neuroscreen-app/rulesets?pageSize=1\")",
+      "Bash(firebase deploy *)",
+      "Bash(npm run *)",
+      "Bash(npm test *)",
+      "Bash(npm install *)"
+    ]
+  }
+}

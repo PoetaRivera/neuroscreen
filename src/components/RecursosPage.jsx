@@ -9,7 +9,7 @@ function RecursosPage() {
       <h2>Recursos y orientación profesional</h2>
       <p>
         Si alguno de tus resultados sugiere rasgos significativos, el siguiente paso es buscar una
-        evaluación con un profesional de la salud mental. NeuroScreen no diagnostica: solo te ayuda a
+        evaluación con un profesional de la salud mental. EvaluMind no diagnostica: solo te ayuda a
         identificar patrones que merecen exploración.
       </p>
 
