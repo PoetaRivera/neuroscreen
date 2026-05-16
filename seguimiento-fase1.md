@@ -196,6 +196,10 @@ src/
 
 1. ~~Inmediato: push, Firestore, deploy~~ ✅ Completado 2026-05-15
 2. ~~Rebrand NeuroScreen → EvaluMind~~ ✅ Completado 2026-05-15
-3. ~~**Mejoras testing**: Reemplazar `dispatchEvent` por `click()` en E2E, agregar Firefox/WebKit, tests unitarios para `wordValidation.js` y `sessionResults.js`~~ ✅ Completado 2026-05-15
-4. **Features futuras**: directorio profesional real, modo oscuro, i18n, tipografía dislexia
-5. **UX avanzada**: tiempos estimados por test en cards, disclaimer cultural RMET, guardar respuestas detalladas en sessionStorage (RT, errores por tipo)
+3. ~~**Mejoras testing**: dispatchEvent→click(), Firefox/WebKit, tests wordValidation + sessionResults~~ ✅ Completado 2026-05-15
+4. ~~Modo oscuro (`prefers-color-scheme`)~~ ✅ Completado 2026-05-15
+5. **Migración npm → pnpm** ✅ Completado 2026-05-15
+6. **i18n**: Descartado 2026-05-15 — demasiado invasivo para el estado actual del proyecto
+7. **Tipografía dislexia** (OpenDyslexic opcional)
+8. **UX avanzada**: tiempos estimados en cards, disclaimer cultural RMET, guardar respuestas detalladas en sessionStorage
+9. **Eliminar proyecto viejo** `neuroscreen-app` de Firebase (manual en consola)
