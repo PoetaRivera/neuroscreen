@@ -1,7 +1,8 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getTest } from '../../data';
 import { useTestSubmission } from '../../hooks/useTestSubmission';
+import { loadEmbeddings } from '../../utils/datEmbeddings';
 import DisclaimerModal from '../Common/DisclaimerModal';
 import InstructionsBanner from './InstructionsBanner';
 import SectionHeader from './SectionHeader';
@@ -61,6 +62,9 @@ function TestContainer() {
   const [showDisclaimer, setShowDisclaimer] = useState(!saved?.accepted);
   const [taskResult, setTaskResult] = useState(null);
   const [fasLetter, setFasLetter] = useState(() => randomFasLetter());
+  const [datEmbeddings, setDatEmbeddings] = useState(null);
+  const [datLoading, setDatLoading] = useState(false);
+  const embeddingsRef = useRef(null);
 
   const {
     loading,
@@ -128,14 +132,28 @@ function TestContainer() {
     saveResponse(test.testId, result.words || [], result);
   }, [test, saveResponse]);
 
-  // DAT handler (needs to pass words to scoringFn)
-  const handleDatComplete = (words) => {
-    const result = test.scoringFn(words);
+  // DAT: cargar embeddings al montar el test
+  useEffect(() => {
+    if (test?.type === 'dat' && !embeddingsRef.current && !datLoading) {
+      setDatLoading(true);
+      loadEmbeddings()
+        .then((emb) => {
+          embeddingsRef.current = emb;
+          setDatEmbeddings(emb);
+        })
+        .catch(() => setDatEmbeddings(null))
+        .finally(() => setDatLoading(false));
+    }
+  }, [test?.type, datLoading]);
+
+  // DAT handler (pasa embeddings al scorer)
+  const handleDatComplete = useCallback((words) => {
+    const result = test.scoringFn(words, embeddingsRef.current);
     setTaskResult(result);
     setAnswers(words);
     setFinished(true);
     saveResponse(test.testId, words, result);
-  };
+  }, [test, saveResponse]);
 
   if (!test) {
     return (
@@ -186,7 +204,7 @@ function TestContainer() {
       return (
         <div className="test-container">
           <InstructionsBanner instructions={test.instructions} />
-          <DatInput onComplete={handleDatComplete} />
+          <DatInput onComplete={handleDatComplete} loading={datLoading} />
         </div>
       );
     case 'fas':

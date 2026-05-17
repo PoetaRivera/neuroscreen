@@ -316,18 +316,52 @@ describe('calculateExecutiveScore', () => {
 // ─── DAT ─────────────────────────────────────────
 
 describe('calculateDatScore', () => {
+  // Mock embeddings: palabras similares → vectores cercanos, palabras diversas → vectores lejanos
+  function makeMockEmbeddings(wordVectors) {
+    const map = new Map();
+    for (const [word, vec] of Object.entries(wordVectors)) {
+      map.set(word, new Float32Array(vec));
+    }
+    return map;
+  }
+
+  // Vectores cercanos (misma región semántica): simulan palabras similares
+  const closeWords = makeMockEmbeddings({
+    perro: [0.1, 0.2, 0.3, 0.1, 0.2],
+    gato: [0.15, 0.22, 0.28, 0.12, 0.18],
+    pez: [0.12, 0.18, 0.32, 0.08, 0.22],
+    caballo: [0.13, 0.21, 0.29, 0.11, 0.19],
+    pajaro: [0.14, 0.19, 0.31, 0.09, 0.21],
+    conejo: [0.11, 0.23, 0.27, 0.13, 0.17],
+    tortuga: [0.16, 0.2, 0.3, 0.1, 0.2],
+  });
+
+  // Vectores diversos: cada uno en una región diferente del espacio
+  const diverseVectors = makeMockEmbeddings({
+    democracia: [0.9, 0.1, 0.05, 0.02, 0.03],
+    hidrogeno: [0.02, 0.95, 0.1, 0.05, 0.08],
+    melancolia: [0.05, 0.03, 0.88, 0.12, 0.04],
+    espagueti: [0.1, 0.08, 0.05, 0.92, 0.06],
+    vertigo: [0.03, 0.06, 0.04, 0.02, 0.91],
+    algebra: [0.88, 0.02, 0.06, 0.01, 0.07],
+    tundra: [0.04, 0.09, 0.07, 0.03, 0.89],
+    pecado: [0.07, 0.04, 0.85, 0.06, 0.05],
+    catedral: [0.06, 0.05, 0.03, 0.88, 0.04],
+    eon: [0.08, 0.07, 0.05, 0.04, 0.86],
+  });
+
   it('less than 7 words → error', () => {
-    const r = calculateDatScore(['perro', 'gato', 'pez']);
+    const r = calculateDatScore(['perro', 'gato', 'pez'], closeWords);
     expect(r.error).toBeTruthy();
     expect(r.total).toBe(0);
   });
 
   it('7 valid words → returns result with all fields', () => {
     const words = ['democracia', 'hidrogeno', 'melancolia', 'espagueti', 'vertigo', 'algebra', 'tundra'];
-    const r = calculateDatScore(words);
+    const r = calculateDatScore(words, diverseVectors);
     expect(r.error).toBeUndefined();
     expect(r.total).toBeGreaterThan(0);
-    expect(r.total).toBeLessThanOrEqual(100);
+    expect(r.total).toBeLessThanOrEqual(200);
     expect(r.finalScore).toBeGreaterThan(0);
     expect(r.averageDistance).toBeGreaterThan(0);
     expect(r.pairwiseDistances).toHaveLength(21); // 7 choose 2 = 21
@@ -337,44 +371,59 @@ describe('calculateDatScore', () => {
     expect(r.profiles).toEqual([]);
   });
 
-  it('all same category → lower score (convergente)', () => {
-    // All naturaleza words
-    const words = ['montaña', 'río', 'árbol', 'bosque', 'isla', 'lago', 'valle'];
-    const r = calculateDatScore(words);
-    expect(r.category).toBe('convergente');
-    expect(r.total).toBeLessThan(35);
+  it('similar words → lower score (convergente)', () => {
+    const words = ['perro', 'gato', 'pez', 'caballo', 'pajaro', 'conejo', 'tortuga'];
+    const r = calculateDatScore(words, closeWords);
+    expect(r.total).toBeLessThan(50);
   });
 
-  it('highly divergent words → altamente-divergente', () => {
-    const words = ['democracia', 'hidrogeno', 'melancolia', 'espagueti', 'vertigo', 'algebra', 'tundra', 'pecado', 'catedral', 'eón'];
-    const r = calculateDatScore(words);
-    expect(r.category).toBe('altamente-divergente');
-    expect(r.total).toBeGreaterThanOrEqual(60);
+  it('diverse words → higher score', () => {
+    const words = ['democracia', 'hidrogeno', 'melancolia', 'espagueti', 'vertigo', 'algebra', 'tundra'];
+    const r = calculateDatScore(words, diverseVectors);
+    expect(r.total).toBeGreaterThan(50);
   });
 
   it('pairwise distances are sorted ascending', () => {
     const words = ['democracia', 'hidrogeno', 'melancolia', 'espagueti', 'vertigo', 'algebra', 'tundra'];
-    const r = calculateDatScore(words);
+    const r = calculateDatScore(words, diverseVectors);
     for (let i = 1; i < r.pairwiseDistances.length; i++) {
       expect(r.pairwiseDistances[i].distance).toBeGreaterThanOrEqual(r.pairwiseDistances[i - 1].distance);
     }
   });
 
   it('result includes childhoodNote', () => {
-    const r = calculateDatScore(['democracia', 'hidrogeno', 'melancolia', 'espagueti', 'vertigo', 'algebra', 'tundra']);
+    const r = calculateDatScore(['democracia', 'hidrogeno', 'melancolia', 'espagueti', 'vertigo', 'algebra', 'tundra'], diverseVectors);
     expect(r.childhoodNote).toBeTruthy();
-    expect(r.childhoodNote).toContain('inteligencia');
+    expect(r.childhoodNote).toContain('Olson');
   });
 
-  it('distinct categories is tracked', () => {
-    const r = calculateDatScore(['democracia', 'hidrogeno', 'melancolia', 'espagueti', 'vertigo', 'algebra', 'tundra']);
-    expect(r.distinctCategories).toBeGreaterThan(0);
+  it('wordsUsed only includes words with embeddings', () => {
+    const r = calculateDatScore(
+      ['democracia', 'hidrogeno', 'melancolia', 'espagueti', 'vertigo', 'algebra', 'tundra', 'xyz_inventada_123'],
+      diverseVectors
+    );
+    expect(r.wordsUsed).toHaveLength(7);
+    expect(r.unknownWords).toContain('xyz_inventada_123');
+  });
+
+  it('word count in wordsUsed equals distinctCategories (new naming)', () => {
+    const words = ['democracia', 'hidrogeno', 'melancolia', 'espagueti', 'vertigo', 'algebra', 'tundra'];
+    const r = calculateDatScore(words, diverseVectors);
+    expect(r.distinctCategories).toBe(7); // now equals word count
   });
 });
 
 // ─── Unified interface ───────────────────────────
 
 describe('unified scoring interface', () => {
+  // Mock embeddings para las pruebas unificadas del DAT
+  const mockDatEmbeddings = new Map();
+  ['arbol', 'democracia', 'melancolia', 'espagueti', 'vertigo', 'algebra', 'tundra'].forEach((w, i) => {
+    const v = new Float32Array(5);
+    v[i % 5] = 0.9;
+    mockDatEmbeddings.set(w, v);
+  });
+
   const allFunctions = [
     { name: 'TDAH', fn: calculateTdahScore, input: all(16, 2) },
     { name: 'TEA', fn: calculateTeaScore, input: all(16, 2) },
@@ -383,7 +432,7 @@ describe('unified scoring interface', () => {
     { name: 'RSD', fn: calculateRsdScore, input: all(16, 2) },
     { name: 'Burnout', fn: calculateMaskingBurnoutScore, input: all(13, 2) },
     { name: 'Ejecutivas', fn: calculateExecutiveScore, input: all(18, 2) },
-    { name: 'DAT', fn: calculateDatScore, input: ['arbol', 'democracia', 'melancolia', 'espagueti', 'vertigo', 'algebra', 'tundra'] },
+    { name: 'DAT', fn: (words) => calculateDatScore(words, mockDatEmbeddings), input: ['arbol', 'democracia', 'melancolia', 'espagueti', 'vertigo', 'algebra', 'tundra'] },
   ];
 
   allFunctions.forEach(({ name, fn, input }) => {

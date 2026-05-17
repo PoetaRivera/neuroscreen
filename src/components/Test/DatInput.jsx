@@ -104,7 +104,7 @@ function StrategyAccordion({ strategy }) {
   );
 }
 
-export default function DatInput({ onComplete }) {
+export default function DatInput({ onComplete, loading }) {
   const [words, setWords] = useState([]);
   const [inputValue, setInputValue] = useState('');
   const [error, setError] = useState(null);
@@ -195,7 +195,21 @@ export default function DatInput({ onComplete }) {
         <p style={{ fontSize: '0.85rem', color: 'var(--color-text-tertiary)', margin: 0 }}>
           Abres uno, sacas una palabra. Lo cierras. Abres otro completamente diferente. Sin mirar atrás.
         </p>
+        <p style={{ fontSize: '0.8rem', color: 'var(--color-text-tertiary)', marginTop: '8px' }}>
+          Basado en Olson, Nahas, Chmoulevitch, Cropper & Webb (2021). PNAS.
+        </p>
       </div>
+
+      {/* Carga de modelo de embeddings */}
+      {loading && (
+        <div style={{
+          textAlign: 'center', padding: '16px', marginBottom: '16px',
+          background: 'var(--color-accent-subtle)', borderRadius: 'var(--radius-md)',
+          color: 'var(--color-accent)', fontSize: '0.9rem', fontWeight: 500,
+        }}>
+          Cargando modelo de lenguaje… (aproximadamente 3.6 MB)
+        </div>
+      )}
 
       {/* Ejemplos desplegables */}
       <div style={{ marginBottom: '20px' }}>

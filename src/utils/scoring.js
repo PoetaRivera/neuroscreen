@@ -1,5 +1,3 @@
-import { SEMANTIC_CATEGORIES, CATEGORY_GROUPS } from '../data/datConfig';
-
 // ═══════════════════════════════════════════════════
 // Factory para tests Likert
 // ═══════════════════════════════════════════════════
@@ -515,46 +513,16 @@ export const calculateExecutiveScore = createLikertScorer({
 // DAT
 // ═══════════════════════════════════════════════════
 
-const DISTANCE_SAME_CATEGORY = 0.22;
-const DISTANCE_SAME_GROUP = 0.50;
-const DISTANCE_DIFFERENT_GROUP = 0.82;
-const DISTANCE_ONE_UNKNOWN = 0.86;
-const DISTANCE_BOTH_UNKNOWN = 0.91;
-const RAW_SCORE_FACTOR = 85;
-const CONSISTENCY_FACTOR = 12;
+// ═══════════════════════════════════════════════════
+// DAT — Divergent Association Task
+// Algoritmo: Olson et al. (2021). PNAS, 118(25), e2022340118.
+// DOI: 10.1073/pnas.2022340118
+// Vectores: GloVe SBWC, CC-BY-4.0, Univ. de Chile
+// ═══════════════════════════════════════════════════
 
-const wordToCategory = new Map();
-for (const [catName, catData] of Object.entries(SEMANTIC_CATEGORIES)) {
-  for (const word of catData.words) {
-    wordToCategory.set(word.toLowerCase(), catName);
-  }
-}
+import { cosineDistance, findVector } from './datEmbeddings';
 
-function classifyWord(word) {
-  const lower = word.toLowerCase();
-  return wordToCategory.has(lower) ? wordToCategory.get(lower) : null;
-}
-
-function getCategoryGroup(category) {
-  for (const [group, cats] of Object.entries(CATEGORY_GROUPS)) {
-    if (cats.includes(category)) return group;
-  }
-  return 'unknown';
-}
-
-function pairwiseDistance(catA, catB) {
-  if (catA && catB && catA === catB) return DISTANCE_SAME_CATEGORY;
-  if (catA && catB && getCategoryGroup(catA) === getCategoryGroup(catB)) return DISTANCE_SAME_GROUP;
-  if (catA && catB) return DISTANCE_DIFFERENT_GROUP;
-  if (catA || catB) return DISTANCE_ONE_UNKNOWN;
-  return DISTANCE_BOTH_UNKNOWN;
-}
-
-function countDistinctCategories(categories) {
-  return new Set(categories.filter(Boolean)).size;
-}
-
-export const calculateDatScore = (words) => {
+export const calculateDatScore = (words, embeddings) => {
   const cleanWords = [...new Set(words.map((w) => w.toLowerCase().trim()))];
 
   if (cleanWords.length < 7) {
@@ -563,6 +531,10 @@ export const calculateDatScore = (words) => {
       finalScore: 0,
       error: 'Se requieren al menos 7 palabras válidas',
       wordsUsed: cleanWords,
+      unknownWords: [],
+      distinctCategories: 0,
+      pairCount: 0,
+      pairwiseDistances: [],
       dimensions: [],
       maxScores: { total: 100 },
       profiles: [],
@@ -572,27 +544,53 @@ export const calculateDatScore = (words) => {
     };
   }
 
-  const classified = cleanWords.map((word) => ({
-    word,
-    category: classifyWord(word),
-  }));
+  // Buscar vectores para cada palabra
+  const wordVectors = [];
+  const unknownWords = [];
 
-  const unknownWords = classified.filter((c) => !c.category).map((c) => c.word);
-  const categories = classified.map((c) => c.category);
-  const distinctCount = countDistinctCategories(categories);
+  for (const word of cleanWords) {
+    const vector = embeddings ? findVector(embeddings, word) : null;
+    if (vector) {
+      wordVectors.push({ word, vector });
+    } else {
+      unknownWords.push(word);
+    }
+  }
 
+  const validWords = wordVectors.length;
+
+  if (validWords < 4) {
+    return {
+      total: 0,
+      finalScore: 0,
+      error: `Solo ${validWords} palabra(s) reconocida(s). Se necesitan al menos 4 palabras con vectores disponibles.`,
+      wordsUsed: cleanWords,
+      unknownWords,
+      distinctCategories: 0,
+      pairCount: 0,
+      pairwiseDistances: [],
+      dimensions: [],
+      maxScores: { total: 100 },
+      profiles: [],
+      category: 'convergente',
+      description: '',
+      childhoodNote: '',
+    };
+  }
+
+  // Calcular distancias coseno entre todos los pares
   let totalDistance = 0;
   let pairs = 0;
   const pairwiseDistances = [];
 
-  for (let i = 0; i < classified.length; i++) {
-    for (let j = i + 1; j < classified.length; j++) {
-      const dist = pairwiseDistance(classified[i].category, classified[j].category);
+  for (let i = 0; i < wordVectors.length; i++) {
+    for (let j = i + 1; j < wordVectors.length; j++) {
+      const dist = cosineDistance(wordVectors[i].vector, wordVectors[j].vector);
       totalDistance += dist;
       pairs++;
       pairwiseDistances.push({
-        wordA: classified[i].word,
-        wordB: classified[j].word,
+        wordA: wordVectors[i].word,
+        wordB: wordVectors[j].word,
         distance: parseFloat(dist.toFixed(4)),
       });
     }
@@ -600,43 +598,37 @@ export const calculateDatScore = (words) => {
 
   const averageDistance = totalDistance / pairs;
 
-  // Varianza poblacional y desviación estándar de distancias entre pares
-  const variance = pairwiseDistances.reduce((sum, p) => sum + Math.pow(p.distance - averageDistance, 2), 0) / pairs;
-  const stdDev = Math.sqrt(variance);
-
-  // Score compuesto: distancia promedio escalada + bonus por consistencia
-  const rawScore = averageDistance;
-  const consistencyBonus = Math.max(0, 1 - stdDev) * CONSISTENCY_FACTOR;
-  const finalScore = Math.min(100, Math.max(0, (rawScore * RAW_SCORE_FACTOR) + consistencyBonus));
+  // Score DAT: distancia coseno promedio × 100
+  // Rango teórico: 0-200. Rango práctico: 50-95 (Olson et al., 2021)
+  const finalScore = Math.round(averageDistance * 100);
 
   let category;
   let description;
 
-  if (finalScore < 35) {
+  if (finalScore < 50) {
     category = 'convergente';
     description =
-      `Tus palabras tendieron a agruparse en ${distinctCount} dominio(s) semántico(s) cercano(s). ` +
-      'Esto sugiere un pensamiento asociativo fluido dentro de categorías familiares. Es útil para la especialización y la profundidad.';
-  } else if (finalScore < 60) {
+      'Tus palabras tendieron a ser semánticamente cercanas. ' +
+      'Esto sugiere un pensamiento asociativo dentro de dominios familiares.';
+  } else if (finalScore < 75) {
     category = 'moderadamente-divergente';
     description =
-      `Mostraste una buena capacidad para saltar entre ${distinctCount} dominios distintos, aunque algunos pares mantuvieron cierta cercanía semántica. ` +
+      'Mostraste una buena capacidad para generar palabras de dominios semánticos distantes. ' +
       'Es un perfil balanceado entre coherencia y flexibilidad.';
   } else {
     category = 'altamente-divergente';
     description =
-      `Tus palabras provinieron de ${distinctCount} dominios semánticos muy distantes entre sí. ` +
-      'Esto sugiere una alta flexibilidad cognitiva y capacidad para conectar ideas remotas. Es un patrón asociado a la creatividad y la innovación conceptual.';
+      'Tus palabras provinieron de dominios semánticos muy lejanos entre sí. ' +
+      'Esto sugiere alta flexibilidad cognitiva y capacidad para conectar ideas remotas, un patrón asociado a la creatividad (Olson et al., 2021).';
   }
 
   return {
-    total: parseFloat(finalScore.toFixed(1)),
-    finalScore: parseFloat(finalScore.toFixed(1)),
+    total: finalScore,
+    finalScore,
     averageDistance: parseFloat(averageDistance.toFixed(4)),
-    standardDeviation: parseFloat(stdDev.toFixed(4)),
-    wordsUsed: classified.map((c) => c.word),
+    wordsUsed: wordVectors.map((wv) => wv.word),
     unknownWords,
-    distinctCategories: distinctCount,
+    distinctCategories: validWords,
     pairCount: pairs,
     pairwiseDistances: pairwiseDistances.sort((a, b) => a.distance - b.distance),
     dimensions: [],
@@ -645,6 +637,9 @@ export const calculateDatScore = (words) => {
     category,
     description,
     childhoodNote:
-      'El pensamiento divergente es un estilo cognitivo, no una medida de inteligencia. Un resultado convergente no indica menor capacidad intelectual, sino un estilo de procesamiento más focalizado. La flexibilidad cognitiva puede entrenarse.',
+      'El pensamiento divergente es un estilo cognitivo, no una medida de inteligencia. ' +
+      'Un resultado convergente no indica menor capacidad intelectual, sino un estilo de procesamiento más focalizado. ' +
+      'Investigación de referencia: Olson, Nahas, Chmoulevitch, Cropper & Webb (2021). ' +
+      'Naming unrelated words predicts creativity. PNAS, 118(25), e2022340118.',
   };
 };
