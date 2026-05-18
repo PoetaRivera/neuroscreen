@@ -13,7 +13,7 @@ function TestCard({ test, navigate }) {
       <p className="test-card-desc">{test.description}</p>
       <div className="test-card-meta">
         <span>{test.isTask ? 'Tarea interactiva' : `${test.questionCount} preguntas`}</span>
-        <span>~{test.isTask ? '3–8' : Math.max(4, Math.ceil(test.questionCount / 2.5))} min</span>
+        <span>~{test.estimatedMinutes || (test.isTask ? 5 : Math.max(4, Math.ceil(test.questionCount / 2.5)))} min</span>
       </div>
       <button className="btn btn-primary" data-testid={`start-test-${test.id}`} onClick={() => navigate(`/test/${test.id}`)}>
         {test.isTask ? 'Comenzar tarea' : 'Comenzar'}

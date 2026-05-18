@@ -5,6 +5,7 @@ const TEST_CARDS = [
     description: 'Evaluación orientativa de rasgos de TDAH según el ASRS-5 (DSM-5). 18 ítems con screener validado de 6 ítems.',
     questionCount: 18,
     isTask: false,
+    estimatedMinutes: 7,
   },
   {
     id: 'tea-adulto',
@@ -12,6 +13,7 @@ const TEST_CARDS = [
     description: 'Autism-Spectrum Quotient de 50 ítems (Baron-Cohen et al., 2001). Evalúa habilidades sociales, atención, comunicación e imaginación. Punto de corte clínico ≥32.',
     questionCount: 50,
     isTask: false,
+    estimatedMinutes: 15,
   },
   {
     id: 'hsp-adulto',
@@ -19,6 +21,7 @@ const TEST_CARDS = [
     description: 'Highly Sensitive Person Scale de 27 ítems (Aron & Aron, 1997). Evalúa 4 dimensiones DOES: profundidad, sobrestimulación, intensidad emocional y sensibilidad sensorial.',
     questionCount: 27,
     isTask: false,
+    estimatedMinutes: 10,
   },
   {
     id: 'alexitimia-adulto',
@@ -26,6 +29,7 @@ const TEST_CARDS = [
     description: 'Evaluación de alexitimia con el TAS-20 (Toronto Alexithymia Scale). 20 ítems. Mide identificación (DIF), descripción (DDF) y pensamiento externo (EOT). Puntos de corte validados.',
     questionCount: 20,
     isTask: false,
+    estimatedMinutes: 7,
   },
   {
     id: 'rsd-adulto',
@@ -33,6 +37,7 @@ const TEST_CARDS = [
     description: 'Rejection Sensitivity Questionnaire adaptado (Downey & Feldman, 1996). 16 ítems. Evalúa percepción de rechazo, respuesta emocional, evitación y rumia.',
     questionCount: 16,
     isTask: false,
+    estimatedMinutes: 6,
   },
   {
     id: 'burnout-masking',
@@ -40,6 +45,7 @@ const TEST_CARDS = [
     description: 'Evalúa las consecuencias del camuflaje: agotamiento post-social, pérdida de identidad, desconexión emocional y colapso. Complementa al CAT-Q (Hull et al., 2019).',
     questionCount: 13,
     isTask: false,
+    estimatedMinutes: 5,
   },
   {
     id: 'funciones-ejecutivas',
@@ -47,6 +53,7 @@ const TEST_CARDS = [
     description: 'Screening basado en el marco BRIEF-A (Gioia et al.). 18 ítems en 4 dominios: inhibición, memoria de trabajo, planificación y flexibilidad cognitiva.',
     questionCount: 18,
     isTask: false,
+    estimatedMinutes: 7,
   },
   {
     id: 'dat',
@@ -55,6 +62,7 @@ const TEST_CARDS = [
     description: 'Evalúa tu capacidad de pensamiento divergente: qué tan lejos saltan tus asociaciones entre palabras.',
     questionCount: 1,
     isTask: true,
+    estimatedMinutes: 5,
   },
   {
     id: 'fas',
@@ -63,6 +71,7 @@ const TEST_CARDS = [
     description: 'Tarea de fluidez verbal fonológica: 3 letras (F, A, S), 60 segundos cada una. Evalúa acceso léxico y flexibilidad cognitiva.',
     questionCount: 1,
     isTask: true,
+    estimatedMinutes: 5,
   },
   {
     id: 'social-scenarios',
@@ -71,6 +80,7 @@ const TEST_CARDS = [
     description: 'Lee 16 situaciones sociales ambiguas. ¿Ves rechazo o casualidad? Complementa el test RSD con una medida objetiva de tu sesgo de interpretación.',
     questionCount: 1,
     isTask: true,
+    estimatedMinutes: 8,
   },
   {
     id: 'self-discrepancy',
@@ -79,6 +89,7 @@ const TEST_CARDS = [
     description: 'Mide la brecha entre quién eres y quién muestras. 25 rasgos con doble valoración: tu yo público y tu yo auténtico.',
     questionCount: 1,
     isTask: true,
+    estimatedMinutes: 10,
   },
   {
     id: 'fer',
@@ -87,6 +98,7 @@ const TEST_CARDS = [
     description: 'Lee 30 situaciones e identifica la emoción que sentiría la mayoría de las personas. Complementa el test de Alexitimia.',
     questionCount: 1,
     isTask: true,
+    estimatedMinutes: 8,
   },
   {
     id: 'sart',
@@ -95,6 +107,7 @@ const TEST_CARDS = [
     description: 'Tarea de atención sostenida: presiona la barra para cada dígito... excepto el 3. Mide inhibición, atención y variabilidad de respuesta.',
     questionCount: 1,
     isTask: true,
+    estimatedMinutes: 8,
   },
   {
     id: 'flanker',
@@ -103,6 +116,7 @@ const TEST_CARDS = [
     description: 'Ignora las flechas distractoras y responde solo a la flecha del centro. Mide control inhibitorio.',
     questionCount: 1,
     isTask: true,
+    estimatedMinutes: 6,
   },
   {
     id: 'digit-span',
@@ -111,6 +125,7 @@ const TEST_CARDS = [
     description: 'Memoriza secuencias de dígitos. Fase directa (repetir en orden) y fase inversa (repetir al revés).',
     questionCount: 1,
     isTask: true,
+    estimatedMinutes: 8,
   },
   {
     id: 'navon',
@@ -119,6 +134,7 @@ const TEST_CARDS = [
     description: 'Letras grandes compuestas de letras pequeñas. ¿Ves primero el bosque o los árboles?',
     questionCount: 1,
     isTask: true,
+    estimatedMinutes: 6,
   },
   {
     id: 'rmet',
@@ -127,6 +143,7 @@ const TEST_CARDS = [
     description: 'Lee descripciones de miradas y elige qué estado mental expresan. Versión textual inspirada en el RMET de Baron-Cohen et al. (2001). No utiliza las fotografías originales.',
     questionCount: 1,
     isTask: true,
+    estimatedMinutes: 8,
   },
   {
     id: 'switch-task',
@@ -135,6 +152,7 @@ const TEST_CARDS = [
     description: 'Alterna entre clasificar por color o por forma. Mide el costo cognitivo de cambiar entre tareas.',
     questionCount: 1,
     isTask: true,
+    estimatedMinutes: 6,
   },
   {
     id: 'sensory-threshold',
@@ -143,6 +161,7 @@ const TEST_CARDS = [
     description: 'Detecta una señal visual entre ruido. Mide tu umbral de detección sensorial.',
     questionCount: 1,
     isTask: true,
+    estimatedMinutes: 5,
   },
   {
     id: 'auditory-distraction',
@@ -151,6 +170,7 @@ const TEST_CARDS = [
     description: 'Responde a puntos verdes mientras suenan distractores. Mide tu susceptibilidad a la distracción.',
     questionCount: 1,
     isTask: true,
+    estimatedMinutes: 6,
   },
 ];
 
