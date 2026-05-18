@@ -203,7 +203,7 @@ src/
 5. **Migración npm → pnpm** ✅ Completado 2026-05-15
 6. **i18n**: Descartado 2026-05-15 — demasiado invasivo para el estado actual del proyecto
 7. ~~Tipografía dislexia (OpenDyslexic opcional)~~ ✅ Completado 2026-05-17. Toggle en header, persistido en localStorage.
-8. **UX avanzada**: tiempos estimados en cards, disclaimer cultural RMET, guardar respuestas detalladas en sessionStorage
+8. ~~**UX avanzada**: tiempos estimados en cards, disclaimer cultural RMET, guardar respuestas detalladas en sessionStorage~~ ✅ Completado 2026-05-17
 9. ~~Eliminar proyecto viejo `neuroscreen-app` de Firebase~~ ✅ Completado 2026-05-15
 10. ~~Auditoría científica de los 20 tests~~ ✅ `auditoria-tests.md` creado 2026-05-17
 11. ~~P0: DAT migrado a Olson et al. (2021)~~ ✅ GloVe SBWC real, 20K vectores español, 130 tests
